@@ -57,7 +57,6 @@
                           <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Price</th>
                             <th scope="col"></th>
                           </tr>
                         </thead>
@@ -65,15 +64,8 @@
                           @foreach ($books as $book)
                             <tr>
                                 <th scope="row">{{$book->id}}</th>
-                                <td><a href="http://localhost:8000/info/{{$book->id}}">{{$book->name}}</a></td>
-                                <td>{{$book->price}}</td>
-                                @if ($book->qty)
-                                    <td>
-                                        <button class="btn btn-success">purchase</button>
-                                    </td>
-                                @else
-                                    <td class="table-danger">out of stock!</td>
-                                @endif
+                                <td>{{$book->name}}</td>
+                                <td class="d-flex justify-content-center"><a class="btn btn-primary" href="http://localhost:8000/info/{{$book->id}}">info</a></td>
                             </tr>
                           @endforeach
                         </tbody>

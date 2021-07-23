@@ -13,7 +13,7 @@
 |
 */
 
-$router->get('/',['uses'=>'BooksController@index']);
+$router->get('/',['as'=>'home','uses'=>'BooksController@index']);
 
 $router->get('/books/search',['uses'=>'BooksController@show']);
 

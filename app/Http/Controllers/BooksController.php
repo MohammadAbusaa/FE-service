@@ -34,13 +34,23 @@ class BooksController extends Controller{
 
         $client=new Client();
 
-        $response=$client->get('http://192.168.1.21:8000/books/search/'.$data['method'].'/'.$data['bookName']);
+        $response=$client->get('http://192.168.1.21:8000/books/search',[
+            'query'=>[
+                'bName'=>$data['bookName'],
+                'sMethod'=>$data['method'],
+            ],
+        ]);
 
-        return view('results',['result'=>json_decode($response->getBody())]);
+        return view('results',['results'=>json_decode($response->getBody())]);
     }
 
     public function info($id)
     {
+        try {
+            (Int)$id;
+        } catch (\Throwable $th) {
+            return redirect('home');
+        }
         $client=new Client();
 
         $response=$client->get('http://192.168.1.21:8000/info/'.$id);
