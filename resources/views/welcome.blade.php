@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Document</title>
+    <title>Home</title>
 </head>
 <body>
     <table class="table table-striped">
@@ -30,13 +30,13 @@
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="method" id="flexRadioDefault1" value="type">
                                             <label class="form-check-label" for="flexRadioDefault1">
-                                              by type
+                                              by topic
                                             </label>
                                           </div>
                                           <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="method" id="flexRadioDefault2" value="name" checked>
                                             <label class="form-check-label" for="flexRadioDefault2">
-                                              by name
+                                              by ID
                                             </label>
                                           </div>
                                           <span class="col-12">

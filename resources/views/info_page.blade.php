@@ -1,4 +1,7 @@
 @extends('layout')
+@section('title')
+    Information
+@endsection
 @section('content')
     <table class="table table-striped table-bordered" style="width: 50%; margin-top:50px;">
         <tbody>

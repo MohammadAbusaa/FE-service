@@ -1,4 +1,7 @@
 @extends('layout')
+@section('title')
+    Search results
+@endsection
 @section('content')
 <table class="table table-striped table-primary table-hover table-bordered" style="margin-top: 50px;">
     <thead>
