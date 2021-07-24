@@ -22,7 +22,9 @@
                 @if ($info->qty>0)
                     <td colspan="2">
                         <div style="width:100px;" class="mx-auto">
-                            <button class="btn btn-outline-success">Purchase</button>
+                            <a href="/purchase/{{$info->id}}">
+                                <button class="btn btn-outline-success">Purchase</button>
+                            </a>
                         </div>
                     </td>    
                 @else

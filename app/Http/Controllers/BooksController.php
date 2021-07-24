@@ -2,29 +2,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use GuzzleHttp;
 use GuzzleHttp\Client;
 
 class BooksController extends Controller{
-    public function index()
-    {
-        $client=new \GuzzleHttp\Client([
+    public function index() //this function is used to get all books
+    {                       //in the store and show them to the user
+
+        $client=new \GuzzleHttp\Client([            //GuzzleHttp is a library that makes http requests handling easier
             'base_uri'=>'http://192.168.1.21:8000',
         ]);
-        // $url='http://192.168.1.21:8000/books';
-        // $curl = curl_init($url);
-        // //curl_setopt($curl, CURLOPT_POST, true);
-        // //curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // $response = curl_exec($curl);
-        // curl_close($curl);
+        $response=$client->get('/books');           //send a get request, the response object is returned
 
-        $response=$client->get('/books');
+        return view('welcome',['books'=>json_decode($response->getBody())]);    //return a view to the user 
+    }                                                                           //with data in the response
 
-        return view('welcome',['books'=>json_decode($response->getBody())]);
-    }
-
-    public function show(Request $request)
+    public function show(Request $request)      //this function is used to search for books
     {
 
         $data=$this->validate($request,[
@@ -34,17 +26,17 @@ class BooksController extends Controller{
 
         $client=new Client();
 
-        $response=$client->get('http://192.168.1.21:8000/books/search',[
-            'query'=>[
+        $response=$client->get('http://192.168.1.21:8000/books/search',[ //this call is the same as above
+            'query'=>[                                                   //with search info 
                 'bName'=>$data['bookName'],
                 'sMethod'=>$data['method'],
             ],
         ]);
 
-        return view('results',['results'=>json_decode($response->getBody())]);
-    }
+        return view('results',['results'=>json_decode($response->getBody())]);  //retrun a view to the user
+    }                                                                           //with data in the response
 
-    public function info($id)
+    public function info($id) //this function is used to show info for a specific item
     {
         try {
             (Int)$id;
@@ -56,5 +48,14 @@ class BooksController extends Controller{
         $response=$client->get('http://192.168.1.21:8000/info/'.$id);
 
         return view('info_page',['info'=>json_decode($response->getBody())]);
+    }
+
+    public function purchase($id) //this function is used to send purchase requests for a specific item
+    {
+        $client=new Client();
+
+        $response=$client->post('http://192.168.1.22:8000/purchase/'.$id);
+
+        return view('status',['status'=>json_decode($response->getBody())]);
     }
 }
