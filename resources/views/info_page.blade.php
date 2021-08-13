@@ -3,6 +3,9 @@
     Information
 @endsection
 @section('content')
+    @if (is_null($info))
+        <p class="text-danger">Couldn't connect to servers!</p>
+    @else
     <table class="table table-striped table-bordered" style="width: 50%; margin-top:50px;">
         <tbody>
             <tr>
@@ -37,4 +40,5 @@
             </tr>
         </tbody>
     </table>
+    @endif
 @endsection

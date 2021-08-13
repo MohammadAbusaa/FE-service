@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Config;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -60,6 +62,8 @@ $app->singleton(
 */
 
 $app->configure('app');
+
+Config::set('index', 0);
 
 /*
 |--------------------------------------------------------------------------

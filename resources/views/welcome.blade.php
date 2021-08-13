@@ -18,7 +18,7 @@
                                 <th scope="row">
                                     Search for a book
                                 </th>
-                                <form action="http://localhost:8000/books/search" method="get">
+                                <form action="/books/search" method="get">
                                 <td>
                                     <div class="mb-3">
                                         <input type="text" class="form-control" id="exampleFormControlInput1" name="bookName" placeholder="type something here">
@@ -51,25 +51,29 @@
             </tr>
             <tr>
                 <th scope="row">
-                    Available books
-                    <table class="table table-striped table-primary table-hover table-bordered" style="margin-top: 50px;">
-                        <thead>
+                  @if (is_null($books))
+                      <p class="text-danger">Couldn't connect to servers!</p>
+                  @else
+                  Available books
+                  <table class="table table-striped table-primary table-hover table-bordered" style="margin-top: 50px;">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Name</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @foreach ($books as $book)
                           <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col"></th>
+                              <th scope="row">{{$book->id}}</th>
+                              <td>{{$book->name}}</td>
+                              <td class="d-flex justify-content-center"><a class="btn btn-primary" href="/info/{{$book->id}}">info</a></td>
                           </tr>
-                        </thead>
-                        <tbody>
-                          @foreach ($books as $book)
-                            <tr>
-                                <th scope="row">{{$book->id}}</th>
-                                <td>{{$book->name}}</td>
-                                <td class="d-flex justify-content-center"><a class="btn btn-primary" href="http://localhost:8000/info/{{$book->id}}">info</a></td>
-                            </tr>
-                          @endforeach
-                        </tbody>
-                      </table>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  @endif
                 </th>
             </tr>
         </tbody>
