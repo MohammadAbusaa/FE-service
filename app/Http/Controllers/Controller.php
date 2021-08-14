@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cache;
+
 use Laravel\Lumen\Routing\Controller as BaseController;
 
 class Controller extends BaseController
@@ -11,8 +13,4 @@ class Controller extends BaseController
         'http://192.168.1.21:7999',
         'http://192.168.1.21:7998'
     ];
-    public function __construct() {
-        self::$index=0;
-        self::$url=self::$urls[self::$index];
-    }
 }

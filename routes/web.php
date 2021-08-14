@@ -4,6 +4,7 @@
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +19,8 @@ use Illuminate\Support\Facades\Log;
 $router->get('/test',function(){
     Log::alert("HELP");
     error_log('HEEEEELP');
-    return (json_encode(['0'=>'FAILED']));
+    error_log(Cache::get('index'));
+    return (Cache::get('index'));
 });
 
 $router->get('/',['as'=>'home','uses'=>'BooksController@index']);

@@ -63,7 +63,6 @@ $app->singleton(
 
 $app->configure('app');
 
-Config::set('index', 0);
 
 /*
 |--------------------------------------------------------------------------
@@ -95,7 +94,7 @@ Config::set('index', 0);
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 

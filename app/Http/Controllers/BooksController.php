@@ -15,10 +15,11 @@ class BooksController extends Controller
 
     public function UpdateURL()
     {
-        $index=Config::get('index');
-        parent::$url = parent::$urls[$index];
-        if ($index > 2) Config::set('index', 0);
-        else Config::set('index', $index+1);
+        if (Cache::get('index') > 2) {
+            Cache::put('index',0);
+        }
+        parent::$url = parent::$urls[Cache::get('index')];        
+        Cache::increment('index');
     }
 
     public function index() //this function is used to get all books
@@ -29,7 +30,7 @@ class BooksController extends Controller
             error_log('Cached!');
             return view('welcome', ['books' => Cache::get('Books')]);
         }
-        $this->UpdateURL();
+        self::UpdateURL();
         $response = null;
         try {
             $client = new \GuzzleHttp\Client([            //GuzzleHttp is a library that makes http requests handling easier
@@ -131,7 +132,7 @@ class BooksController extends Controller
             return view('info_page', ['info' => Cache::get('info' . $id)]);
         }
         set_time_limit(60);
-        $this->UpdateURL();
+        self::UpdateURL();
 
         try {
             $client = new Client();
