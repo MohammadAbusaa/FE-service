@@ -26,9 +26,16 @@ class BooksController extends Controller
     {                       //in the store and show them to the user
 
         set_time_limit(60);
-        if (Cache::has('Books')) {
+        $res=null;
+        try {
+            $res=json_decode((new Client())->get('192.168.1.19:7999/cache/books')->getBody());
+            //foreach($res[0] as $i)error_log($i->name);
+        } catch (\Throwable $th) {
+            error_log('NO CACHE');
+        }
+        if (!is_null($res)&&!empty($res[0])) {
             error_log('Cached!');
-            return view('welcome', ['books' => Cache::get('Books')]);
+            return view('welcome', ['books' => $res[0]]);
         }
         self::UpdateURL();
         $response = null;
@@ -39,20 +46,32 @@ class BooksController extends Controller
             $response = $client->get('/books');           //send a get request, the response object is returned
 
             $data = json_decode($response->getBody());
-            Cache::put('Books', $data, 60);
+            try {
+                ((new Client())->post('192.168.1.19:7999/cache/books/create',['form_params'=>['books'=>$data]]));
+            } catch (\Throwable $th) {
+                error_log('NO CACHE TO SAVE');
+            }
         } catch (ConnectException $th) {
             //return \GuzzleHttp\Psr7\Message::toString($th->getRequest());
             $this->UpdateURL();
             try {
                 $response = (new \GuzzleHttp\Client())->get(parent::$url . '/books');
                 $data = json_decode($response->getBody());
-                Cache::put('Books', $data, 60);
+                try {
+                    ((new Client())->post('192.168.1.19:7999/cache/books/create',['form_params'=>['books'=>$data]]));
+                } catch (\Throwable $th) {
+                    error_log('NO CACHE TO SAVE');
+                }
             } catch (ConnectException $t) {
                 $this->UpdateURL();
                 try {
                     $response = (new \GuzzleHttp\Client())->get(parent::$url . '/books');
                     $data = json_decode($response->getBody());
-                    Cache::put('Books', $data, 60);
+                    try {
+                        ((new Client())->post('192.168.1.19:7999/cache/books/create',['form_params'=>['books'=>$data]]));
+                    } catch (\Throwable $th) {
+                        error_log('NO CACHE TO SAVE');
+                    }
                 } catch (ConnectException $e) {
                     $data = null;
                 } catch (\Throwable $th) {
@@ -126,10 +145,15 @@ class BooksController extends Controller
         } catch (\Throwable $th) {
             return redirect('home');
         }
-
-        if (Cache::has('info' . $id)) {
+        $res=null;
+        try {
+            $res=json_decode((new Client())->get('192.168.1.19:7999/cache/info/'.$id)->getBody());
+        } catch (\Throwable $th) {
+            error_log('NO CACHE');
+        }
+        if (!is_null($res)&&!empty($res[0])) {
             error_log('Cached!');
-            return view('info_page', ['info' => Cache::get('info' . $id)]);
+            return view('info_page', ['info' => $res[0]]);
         }
         set_time_limit(60);
         self::UpdateURL();
@@ -141,7 +165,11 @@ class BooksController extends Controller
 
             $data = json_decode($response->getBody());
 
-            Cache::put('info' . $id, $data, 60);
+            try {
+                (new Client())->post('192.168.1.19:7999/cache/info/create/'.$id,['form_params'=>['data'=>$data]]);
+            } catch (\Throwable $th) {
+                error_log('NO CACHE TO SAVE');
+            }
         } catch (ConnectException $th) {
             $this->UpdateURL();
             try {
@@ -151,7 +179,11 @@ class BooksController extends Controller
 
                 $data = json_decode($response->getBody());
 
-                Cache::put('info' . $id, $data, 60);
+                try {
+                    (new Client())->post('192.168.1.19:7999/cache/info/create/'.$id,['form_params'=>['data'=>$data]]);
+                } catch (\Throwable $th) {
+                    error_log('NO CACHE TO SAVE');
+                }
             } catch (ConnectException $t) {
                 $this->UpdateURL();
                 try {
@@ -161,7 +193,11 @@ class BooksController extends Controller
 
                     $data = json_decode($response->getBody());
 
-                    Cache::put('info' . $id, $data, 60);
+                    try {
+                        (new Client())->post('192.168.1.19:7999/cache/info/create/'.$id,['form_params'=>['data'=>$data]]);
+                    } catch (\Throwable $th) {
+                        error_log('NO CACHE TO SAVE');
+                    }
                 } catch (ConnectException $t) {
                     $data = null;
                 } catch (\Throwable $th) {
@@ -182,10 +218,32 @@ class BooksController extends Controller
             try {
                 $client = new Client();
 
-                $response = $client->post('http://192.168.1.22:8000/purchase/' . $id);
-            } catch (ConnectException $e) {
+                // $curl = curl_init();
+ 
+                // curl_setopt_array($curl, array(
+                // CURLOPT_URL => '192.168.1.22:8000/purchase/'.$id,
+                // CURLOPT_RETURNTRANSFER => true,
+                // CURLOPT_ENCODING => '',
+                // CURLOPT_MAXREDIRS => 10,
+                // CURLOPT_TIMEOUT => 0,
+                // CURLOPT_FOLLOWLOCATION => true,
+                // CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                // CURLOPT_CUSTOMREQUEST => 'POST',
+                // ));
+                
+                // $response = curl_exec($curl);
+                
+                // curl_close($curl);
+                $response=$client->post('192.168.1.22:8000/purchase/'.$id);
+                error_log($response->getBody());
+            } catch(ConnectException $e){
+                error_log('xxxxxx');
+                error_log(GuzzleHttp\Psr7\Message::toString($e->getResponse()));
+            }
+            catch (\Throwable $e1) {
+                error_log(get_class($e1));
                 error_log('server 1');
-                error_log(\GuzzleHttp\Psr7\Message::toString($e->getRequest()));
+                error_log($e1->getMessage());
             }
         } else if ($id == 3 || $id == 4) {
             try {
